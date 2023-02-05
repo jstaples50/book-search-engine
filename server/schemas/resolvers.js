@@ -58,3 +58,5 @@ const reslovers = {
     },
   },
 };
+
+module.exports = reslovers;
