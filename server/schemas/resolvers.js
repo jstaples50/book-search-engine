@@ -25,7 +25,7 @@ const reslovers = {
         throw new AuthenticationError("Incorrect email/password");
       }
 
-      const token = signToken(user);
+      const token = signToken(user.username, user.email, user._id);
       return { token, user };
     },
     addUser: async (parent, { username, email, password }) => {
@@ -34,12 +34,18 @@ const reslovers = {
 
       return { token, user };
     },
-    saveBook: async (parent, BookInput, context) => {
+    saveBook: async (
+      parent,
+      { bookId, authors, title, description, image },
+      context
+    ) => {
       if (context.user) {
         return await User.findOneAndUpdate(
           { _id: context.user._id },
           {
-            $addToSet: { savedBooks: BookInput },
+            $addToSet: {
+              savedBooks: { bookId, authors, title, description, image },
+            },
           },
           { new: true }
         );
